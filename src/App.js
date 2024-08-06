@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./pages/Homepage/HomePage";
+import MovieDetailsPage from "./pages/MovieDetailsPage/MovieDetailsPage";
+import SignUpModal from "./components/SignUpModal";
 
 function App() {
+  const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSignUpClick = () => {
+    setSignUpModalOpen(true);
+  };
+
+  const handleSignUpModalClose = () => {
+    setSignUpModalOpen(false);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header onSignUpClick={handleSignUpClick} onSearch={handleSearch} />
+      <SignUpModal
+        open={isSignUpModalOpen}
+        handleClose={handleSignUpModalClose}
+      />
+      <Routes>
+        <Route path="/" element={<HomePage onSearch={handleSearch} searchQuery={searchQuery} />} />
+        <Route path="/movie/:id" element={<MovieDetailsPage />} />
+      </Routes>
+    </Router>
   );
 }
 
